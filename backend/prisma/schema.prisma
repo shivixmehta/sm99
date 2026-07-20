@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// SQLite has no native enum support in Prisma, so the following fields are
+// plain Strings validated against a fixed set of values at the API layer (zod):
+// Role: ADMIN | MANAGER | STAFF
+// InventoryItem.category: GENERAL | OT_DISPOSABLE | IVF_INJECTION | MEDICINE | EQUIPMENT
+// StockTransaction.type: STOCK_IN | STOCK_OUT | ADJUSTMENT | TRANSFER_IN | TRANSFER_OUT
+// Attendance.status: PRESENT | ABSENT | HALF_DAY | LEAVE | HOLIDAY
+
+model Location {
+  id                Int                @id @default(autoincrement())
+  name              String             @unique
+  code              String             @unique
+  address           String?
+  createdAt         DateTime           @default(now())
+  users             User[]
+  staff             Staff[]
+  stocks            InventoryStock[]
+  transactions      StockTransaction[]
+  otCases           OTCase[]
+  ivfPackages       IVFPackage[]
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  name         String
+  email        String    @unique
+  passwordHash String
+  role         String    @default("STAFF")
+  locationId   Int?
+  location     Location? @relation(fields: [locationId], references: [id])
+  active       Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+}
+
+model Staff {
+  id           Int          @id @default(autoincrement())
+  employeeCode String       @unique
+  name         String
+  designation  String
+  department   String?
+  phone        String?
+  locationId   Int
+  location     Location     @relation(fields: [locationId], references: [id])
+  active       Boolean      @default(true)
+  joinDate     DateTime     @default(now())
+  createdAt    DateTime     @default(now())
+  attendances  Attendance[]
+}
+
+model Attendance {
+  id        Int      @id @default(autoincrement())
+  staffId   Int
+  staff     Staff    @relation(fields: [staffId], references: [id])
+  date      DateTime
+  status    String
+  checkIn   String?
+  checkOut  String?
+  remarks   String?
+  markedAt  DateTime @default(now())
+
+  @@unique([staffId, date])
+}
+
+model InventoryItem {
+  id           Int                 @id @default(autoincrement())
+  name         String
+  category     String
+  unit         String
+  sku          String?             @unique
+  reorderLevel Int                 @default(0)
+  costPrice    Float?
+  active       Boolean             @default(true)
+  createdAt    DateTime            @default(now())
+  stocks       InventoryStock[]
+  transactions StockTransaction[]
+  otUsages     OTDisposableUsage[]
+  ivfUsages    IVFInjectionUsage[]
+
+  @@index([category])
+}
+
+model InventoryStock {
+  id         Int           @id @default(autoincrement())
+  itemId     Int
+  item       InventoryItem @relation(fields: [itemId], references: [id])
+  locationId Int
+  location   Location      @relation(fields: [locationId], references: [id])
+  quantity   Int           @default(0)
+
+  @@unique([itemId, locationId])
+}
+
+model StockTransaction {
+  id          Int           @id @default(autoincrement())
+  itemId      Int
+  item        InventoryItem @relation(fields: [itemId], references: [id])
+  locationId  Int
+  location    Location      @relation(fields: [locationId], references: [id])
+  type        String
+  quantity    Int
+  reason      String?
+  reference   String?
+  performedBy String?
+  createdAt   DateTime      @default(now())
+
+  @@index([itemId, locationId])
+}
+
+model OTCase {
+  id          Int                 @id @default(autoincrement())
+  caseNumber  String              @unique
+  patientName String
+  surgeryName String
+  surgeon     String?
+  locationId  Int
+  location    Location            @relation(fields: [locationId], references: [id])
+  date        DateTime            @default(now())
+  notes       String?
+  createdAt   DateTime            @default(now())
+  disposables OTDisposableUsage[]
+}
+
+model OTDisposableUsage {
+  id        Int           @id @default(autoincrement())
+  caseId    Int
+  case      OTCase        @relation(fields: [caseId], references: [id])
+  itemId    Int
+  item      InventoryItem @relation(fields: [itemId], references: [id])
+  quantity  Int
+  createdAt DateTime      @default(now())
+}
+
+model IVFPackage {
+  id          Int                 @id @default(autoincrement())
+  packageCode String              @unique
+  patientName String
+  partnerName String?
+  packageType String
+  locationId  Int
+  location    Location            @relation(fields: [locationId], references: [id])
+  startDate   DateTime            @default(now())
+  status      String              @default("ACTIVE")
+  notes       String?
+  createdAt   DateTime            @default(now())
+  injections  IVFInjectionUsage[]
+}
+
+model IVFInjectionUsage {
+  id                Int           @id @default(autoincrement())
+  packageId         Int
+  package           IVFPackage    @relation(fields: [packageId], references: [id])
+  itemId            Int
+  item              InventoryItem @relation(fields: [itemId], references: [id])
+  quantity          Int
+  date              DateTime      @default(now())
+  administeredBy    String?
+  includedInPackage Boolean       @default(true)
+  notes             String?
+}
