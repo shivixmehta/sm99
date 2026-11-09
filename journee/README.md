@@ -32,7 +32,7 @@ Model names, effort levels and size limits live in `src/ai/models.ts`.
 |---|---|
 | `src/sections/<id>/config.ts` | Each Section, described as data (`SectionConfig` in `src/sections/types.ts`) |
 | `src/ai/` | AI client, models config, reusable `<Chat>`, prompt builder |
-| `netlify/functions/ai.mts` | The serverless AI proxy |
+| `netlify/functions/ai.mts` | The serverless AI proxy (Netlify config: `/netlify.toml` at the repo root) |
 | `src/sections/registry.ts` | Built-in Sections + user-made Sections from Dexie |
 | `src/ai/prompts/*.md` | The AI personas: edit these freely. `_shared.md` is the house voice + accuracy rules |
 | `src/db/schema.ts` | Dexie (IndexedDB) schema. Never edit version 1; add a new version |

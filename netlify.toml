@@ -1,5 +1,9 @@
-# Netlify: set the site's "Base directory" to `journee` when connecting the repo.
+# Netlify config for Journée (the app lives in journee/).
+# This file sits at the repo root so Netlify finds it without any dashboard
+# settings; `base` points the build at the journee folder, and the other paths
+# are relative to it. Settings in this file override the Netlify UI.
 [build]
+  base = "journee"
   command = "npm run build"
   publish = "dist"
   functions = "netlify/functions"
