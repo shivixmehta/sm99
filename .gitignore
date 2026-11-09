@@ -8,3 +8,6 @@ backend/prisma/dev.db
 backend/prisma/dev.db-journal
 
 frontend/dist/
+
+# Local Netlify folder
+.netlify

@@ -1,0 +1,19 @@
+# Netlify: set the site's "Base directory" to `journee` when connecting the repo.
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+[dev]
+  framework = "vite"
+  targetPort = 5173
+  port = 8888
+
+# SPA fallback (the function's own path /api/ai is matched first)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

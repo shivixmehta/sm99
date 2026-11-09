@@ -2,7 +2,12 @@ import type { CSSProperties } from 'react';
 import type { SectionConfig } from './types';
 
 /** Shows a Section's description, daily item and activities. Used as a placeholder and for user Sections. */
-export function SectionOverview({ section, comingInPhase }: { section: SectionConfig; comingInPhase?: number }) {
+export function SectionOverview({ section, comingInPhase, ready = [] }: {
+  section: SectionConfig;
+  comingInPhase?: number;
+  /** Activity ids that already work (no "Soon" chip). */
+  ready?: string[];
+}) {
   return (
     <div className="section-page" style={{ '--accent': section.colour } as CSSProperties}>
       <header className="section-hero">
@@ -27,7 +32,7 @@ export function SectionOverview({ section, comingInPhase }: { section: SectionCo
               <strong>{a.name}</strong>
               <p className="muted">{a.description}</p>
             </div>
-            {comingInPhase && <span className="chip">Soon</span>}
+            {comingInPhase && !ready.includes(a.id) && <span className="chip">Soon</span>}
           </li>
         ))}
       </ul>
