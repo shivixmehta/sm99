@@ -5,6 +5,8 @@ A full-stack web app for managing hospital operations across two locations —
 disposables, IVF injections (bundled into patient packages), and staff
 attendance.
 
+> This repo also contains **[Journée](journee/)**, a separate personal companion PWA in `journee/`.
+
 ## Features
 
 - **Multi-location** — every module is scoped per location, with a location

@@ -1,0 +1,58 @@
+/* Calm, Mauritius-inspired palette: lagoon blue, sand, soft green, a little coral. */
+:root {
+  color-scheme: light;
+  --lagoon: #1f7a8c;
+  --lagoon-soft: #4fb3bf;
+  --sand: #f6efe3;
+  --sand-deep: #ead9bd;
+  --green: #5fa777;
+  --coral: #e07a5f;
+
+  --bg: var(--sand);
+  --surface: #fffbf4;
+  --surface-2: #f1e7d6;
+  --text: #22323a;
+  --text-muted: #5f6f74;
+  --border: #e3d6c0;
+  --primary: var(--lagoon);
+  --primary-text: #ffffff;
+  --danger: #b4483a;
+  --shadow: 0 1px 2px rgb(60 45 20 / 6%), 0 4px 16px rgb(60 45 20 / 6%);
+
+  --radius: 16px;
+  --radius-sm: 10px;
+  --gutter: 16px;
+  --nav-h: 64px;
+  --font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  --font-serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg: #0f1c22;
+    --surface: #16262d;
+    --surface-2: #1d3139;
+    --text: #e8eef0;
+    --text-muted: #9bb0b6;
+    --border: #2a4049;
+    --primary: #4fb3bf;
+    --primary-text: #0b1a1f;
+    --danger: #e0806f;
+    --shadow: 0 1px 2px rgb(0 0 0 / 30%);
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0f1c22;
+  --surface: #16262d;
+  --surface-2: #1d3139;
+  --text: #e8eef0;
+  --text-muted: #9bb0b6;
+  --border: #2a4049;
+  --primary: #4fb3bf;
+  --primary-text: #0b1a1f;
+  --danger: #e0806f;
+  --shadow: 0 1px 2px rgb(0 0 0 / 30%);
+}
